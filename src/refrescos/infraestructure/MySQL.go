@@ -21,7 +21,7 @@ func NewMySQL() domain.IRefrescos {
 	return &MySQL{conn: conn}
 }
 func (mysql *MySQL) SaveRefrescos(marca string, precio float32) {
-	query := "INSERT INTO refresco (marca, modelo, precio) VALUES (?, ?, ?)"
+	query := "INSERT INTO refresco (marca, precio) VALUES (?, ?, ?)"
 	result, err := mysql.conn.ExecutePreparedQuery(query, marca, precio)
 	if err != nil {
 		log.Fatalf("Error al ejecutar la consulta: %v", err)
