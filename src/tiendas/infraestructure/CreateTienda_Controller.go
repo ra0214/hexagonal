@@ -35,5 +35,5 @@ func (cp_c *CreateTiendaController) Execute(w http.ResponseWriter, r *http.Reque
 	cp_c.useCase.Execute(body.Nombre, body.Ubicacion)
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Perfume agregado correctamente"})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Tienda agregada correctamente"})
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"encoding/json"
 )
 
 type DeleteTiendaController struct {
@@ -30,5 +31,5 @@ func (dp_c *DeleteTiendaController) Execute(w http.ResponseWriter, r *http.Reque
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Tienda eliminada correctamente"))
+	json.NewEncoder(w).Encode(map[string]string{"message": "Tienda eliminada correctamente"})
 }

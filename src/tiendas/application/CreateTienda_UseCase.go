@@ -8,7 +8,7 @@ type CreateTienda struct {
 	db domain.ITienda
 }
 
-func NewCreatePerfume(db domain.ITienda) *CreateTienda {
+func NewCreateTienda(db domain.ITienda) *CreateTienda {
 	return &CreateTienda{db: db}
 }
 

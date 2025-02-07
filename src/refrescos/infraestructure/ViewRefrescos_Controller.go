@@ -2,6 +2,7 @@ package infraestructure
 
 import (
 	"actividad/src/refrescos/application"
+	"encoding/json"
 	"net/http"
 )
 
@@ -14,6 +15,15 @@ func NewViewRefrescosController(useCase application.ViewRefrescos) *ViewRefresco
 }
 
 func (vp_c *ViewRefrescosController) Execute(w http.ResponseWriter, r *http.Request) {
-	vp_c.useCase.Execute()
-	w.Write([]byte("Lista de Refrescos"))
+	refrescos, err := vp_c.useCase.Execute()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(refrescos)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

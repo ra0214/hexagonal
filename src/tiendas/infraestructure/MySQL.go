@@ -20,6 +20,7 @@ func NewMySQL() domain.ITienda {
 	}
 	return &MySQL{conn: conn}
 }
+
 func (mysql *MySQL) SaveTienda(nombre string, ubicacion string) {
 	query := "INSERT INTO tienda (nombre, ubicacion) VALUES ( ?, ?)"
 	result, err := mysql.conn.ExecutePreparedQuery(query, nombre, ubicacion)
@@ -29,29 +30,32 @@ func (mysql *MySQL) SaveTienda(nombre string, ubicacion string) {
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 1 {
-		log.Printf("[MySQL] - Tienda guardada correctamente: Nombre: %s - Ubicacion: %.2f", nombre, ubicacion)
+		log.Printf("[MySQL] - Tienda guardada correctamente: Nombre: %s - Ubicacion: %s", nombre, ubicacion)
 	} else {
 		log.Println("[MySQL] - No se insertó ninguna fila")
 	}
 }
 
-func (mysql *MySQL) GetAll() {
-	query := "SELECT * FROM tienda"
-	rows := mysql.conn.FetchRows(query)
-	defer rows.Close()
+func (mysql *MySQL) GetAll() ([]domain.Tienda, error) {
+    query := "SELECT * FROM tienda"
+    rows := mysql.conn.FetchRows(query)
+    defer rows.Close()
 
-	for rows.Next() {
-		var id int
-		var nombre, ubicacion string
-		if err := rows.Scan(&id, &nombre, &ubicacion); err != nil {
-			fmt.Printf("Error al escanear la fila: %v\n", err)
-		}
-		fmt.Printf("ID: %d, Nombre: %s, Ubicacion: %.2f\n", id, nombre, ubicacion)
-	}
+    var tiendas []domain.Tienda
 
-	if err := rows.Err(); err != nil {
-		fmt.Printf("Error iterando sobre las filas: %v\n", err)
-	}
+    for rows.Next() {
+        var tienda domain.Tienda
+        if err := rows.Scan(&tienda.ID, &tienda.Nombre, &tienda.Ubicacion); err != nil {
+            return nil, fmt.Errorf("error scanning row: %w", err)
+        }
+        tiendas = append(tiendas, tienda)
+    }
+
+    if err := rows.Err(); err != nil {
+        return nil, fmt.Errorf("error iterating rows: %w", err)
+    }
+
+    return tiendas, nil
 }
 
 func (mysql *MySQL) UpdateTienda(id int32, nombre string, ubicacion string) error {

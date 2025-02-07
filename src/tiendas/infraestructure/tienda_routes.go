@@ -7,7 +7,7 @@ import (
 )
 
 func SetupRouter(repo domain.ITienda) {
-	createTienda := application.NewCreatePerfume(repo)
+	createTienda := application.NewCreateTienda(repo)
 	createTiendaController := NewCreateTiendaController(*createTienda)
 
 	viewTienda := application.NewViewTienda(repo)

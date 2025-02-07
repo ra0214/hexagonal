@@ -20,8 +20,9 @@ func NewMySQL() domain.IRefrescos {
 	}
 	return &MySQL{conn: conn}
 }
+
 func (mysql *MySQL) SaveRefrescos(marca string, precio float32) {
-	query := "INSERT INTO refresco (marca, precio) VALUES (?, ?, ?)"
+	query := "INSERT INTO refresco (marca, precio) VALUES (?, ?)"
 	result, err := mysql.conn.ExecutePreparedQuery(query, marca, precio)
 	if err != nil {
 		log.Fatalf("Error al ejecutar la consulta: %v", err)
@@ -35,24 +36,26 @@ func (mysql *MySQL) SaveRefrescos(marca string, precio float32) {
 	}
 }
 
-func (mysql *MySQL) GetAll() {
+func (mysql *MySQL) GetAll() ([]domain.Refrescos, error){
 	query := "SELECT * FROM refresco"
 	rows := mysql.conn.FetchRows(query)
 	defer rows.Close()
 
+	var refrescos []domain.Refrescos
+
 	for rows.Next() {
-		var id int
-		var marca string
-		var precio float32
-		if err := rows.Scan(&id, &marca, &precio); err != nil {
-			fmt.Printf("Error al escanear la fila: %v\n", err)
+		var refresco domain.Refrescos
+		if err := rows.Scan(&refresco.ID, &refresco.Marca, &refresco.Precio); err != nil {
+            return nil, fmt.Errorf("error scanning row: %w", err)
 		}
-		fmt.Printf("ID: %d, Marca: %s, Precio: %.2f\n", id, marca, precio)
+		refrescos = append(refrescos, refresco)
 	}
 
 	if err := rows.Err(); err != nil {
-		fmt.Printf("Error iterando sobre las filas: %v\n", err)
+		return nil, fmt.Errorf("error iterating rows: %w", err)
 	}
+
+	return refrescos, nil
 }
 
 func (mysql *MySQL) UpdateRefrescos(id int32, marca string, precio float32) error {

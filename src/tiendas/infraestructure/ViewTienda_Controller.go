@@ -2,6 +2,7 @@ package infraestructure
 
 import (
 	"actividad/src/tiendas/application"
+	"encoding/json"
 	"net/http"
 )
 
@@ -14,6 +15,15 @@ func NewViewTiendaController(useCase application.ViewTienda) *ViewTiendaControll
 }
 
 func (vp_c *ViewTiendaController) Execute(w http.ResponseWriter, r *http.Request) {
-	vp_c.useCase.Execute()
-	w.Write([]byte("Lista de tiendas"))
+	tiendas, err := vp_c.useCase.Execute()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(tiendas)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

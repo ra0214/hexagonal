@@ -1,12 +1,17 @@
 package main
 
 import (
+	"fmt"
 	tiendaInfra "actividad/src/tiendas/infraestructure"
-	perfumeInfra "actividad/src/refrescos/infraestructure"
+	refrescosInfra "actividad/src/refrescos/infraestructure"
 )
 
 func main() {
-	tiendaInfra.Iniciar()
+	fmt.Println("Inicializando tienda...")
+	go tiendaInfra.Init()
 
-	perfumeInfra.Init()
+	fmt.Println("Inicializando refrescos...")
+	go refrescosInfra.Init()
+
+	select {}
 }

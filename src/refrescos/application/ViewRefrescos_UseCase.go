@@ -10,6 +10,6 @@ func NewViewRefrescos(db domain.IRefrescos) *ViewRefrescos {
 	return &ViewRefrescos{db: db}
 }
 
-func (vp *ViewRefrescos) Execute()  {
-	vp.db.GetAll()
+func (vp *ViewRefrescos) Execute() ([]domain.Refrescos, error)  {
+	return vp.db.GetAll()
 }

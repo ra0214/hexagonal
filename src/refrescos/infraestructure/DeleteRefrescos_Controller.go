@@ -2,6 +2,7 @@ package infraestructure
 
 import (
 	"actividad/src/refrescos/application"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -30,5 +31,5 @@ func (dp_c *DeleteRefrescosController) Execute(w http.ResponseWriter, r *http.Re
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Refresco eliminado correctamente"))
+	json.NewEncoder(w).Encode(map[string]string{"message":"Refresco eliminado correctamente"})
 }

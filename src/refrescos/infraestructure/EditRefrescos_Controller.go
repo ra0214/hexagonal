@@ -41,5 +41,5 @@ func (ep_c *EditRefrescosController) Execute(w http.ResponseWriter, r *http.Requ
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Refresco actualizado correctamente"))
+	json.NewEncoder(w).Encode(map[string]string{"message": "Refresco actualizado correctamente"})
 }

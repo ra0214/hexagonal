@@ -1,6 +1,6 @@
 package infraestructure
 
-func Iniciar() {
+func Init() {
 	ps := NewMySQL()
 	SetupRouter(ps)
 }
